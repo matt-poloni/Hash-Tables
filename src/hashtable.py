@@ -13,6 +13,7 @@ class HashTable:
     that accepts string keys
     '''
     def __init__(self, capacity):
+        self.count = 0
         self.capacity = capacity  # Number of buckets in the hash table
         self.storage = [None] * capacity
 
@@ -51,6 +52,9 @@ class HashTable:
 
         Fill this in.
         '''
+        self.count += 1
+        # if self.count > self.capacity:
+        #     self.resize()
         index = self._hash_mod(key)
         new_pair = LinkedPair(key, value)
         if (pair := self.storage[index]) is not None:
@@ -88,6 +92,7 @@ class HashTable:
                 prev.next = pair.next
             else:
                 self.storage[index] = None
+            self.count -= 1
         else:
             print(f"ERROR: '{key}' key not found")
 
@@ -116,7 +121,15 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        old_capacity = self.capacity
+        old_storage = [*self.storage]
+        self.capacity *= 2
+        self.storage = [None] * self.capacity
+        for i in range(old_capacity):
+            if (pair := old_storage[i]) is not None:
+                while pair is not None:
+                    self.insert(pair.key, pair.value)
+                    pair = pair.next
 
 
 
