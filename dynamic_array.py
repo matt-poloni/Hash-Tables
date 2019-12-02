@@ -5,8 +5,7 @@ class DynamicArray:
         self.storage = [None] * self.capacity
     def insert(self, index, value):
         if self.count >= self.capacity:
-            print("ERROR: Array is full")
-            return
+            self.double_size()
         if index > self.count:
             print("ERROR: Out of range")
             return
@@ -31,3 +30,18 @@ class DynamicArray:
         for i in range(self.count):
             new_storage[i] = self.storage[i]
         self.storage = new_storage
+
+my_array = DynamicArray(3)
+my_array.delete(0)
+my_array.append(5)
+my_array.delete(0)
+my_array.prepend(4)
+print(my_array.storage)
+my_array.insert(2, 3)
+print(my_array.storage)
+my_array.delete(2)
+print(my_array.storage)
+my_array.insert(2, 7)
+print(my_array.storage)
+my_array.insert(2, 78)
+print(my_array.storage)
