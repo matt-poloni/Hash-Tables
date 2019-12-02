@@ -74,7 +74,22 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+        prev = None
+        if (pair := self.storage[index]) is not None:
+            while pair.key != key:
+                if pair.next is not None:
+                    prev = pair
+                    pair = pair.next
+                else:
+                    print(f"ERROR: '{key}' key not found")
+                    return
+            if prev is not None:
+                prev.next = pair.next
+            else:
+                self.storage[index] = None
+        else:
+            print(f"ERROR: '{key}' key not found")
 
 
     def retrieve(self, key):
