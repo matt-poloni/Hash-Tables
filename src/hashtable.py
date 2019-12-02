@@ -33,7 +33,10 @@ class HashTable:
 
         OPTIONAL STRETCH: Research and implement DJB2
         '''
-        pass
+        hash_value = 5381
+        for char in key:
+            hash_value = ((hash_value << 5) + hash_value) ^ ord(char)
+        return hash_value
 
 
     def _hash_mod(self, key):
@@ -41,7 +44,7 @@ class HashTable:
         Take an arbitrary key and return a valid integer index
         within the storage capacity of the hash table.
         '''
-        return self._hash(key) % self.capacity
+        return self._hash_djb2(key) % self.capacity
 
 
     def insert(self, key, value):
@@ -127,9 +130,9 @@ class HashTable:
         self.storage = [None] * self.capacity
         for i in range(old_capacity):
             if (pair := old_storage[i]) is not None:
-                while pair is not None:
-                    self.insert(pair.key, pair.value)
-                    pair = pair.next
+              while pair is not None:
+                  self.insert(pair.key, pair.value)
+                  pair = pair.next
 
 
 
