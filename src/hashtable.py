@@ -54,9 +54,15 @@ class HashTable:
         index = self._hash_mod(key)
         new_pair = LinkedPair(key, value)
         if (pair := self.storage[index]) is not None:
-            while pair.next is not None:
-                pair = pair.next
-            pair.next = new_pair
+            while pair is not None:
+                if pair.key == key:
+                    pair.value = value
+                    return
+                elif pair.next is not None:
+                    pair = pair.next
+                else:
+                    pair.next = new_pair
+                    return
         else:
             self.storage[index] = new_pair
 
