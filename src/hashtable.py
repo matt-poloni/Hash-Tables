@@ -57,8 +57,6 @@ class HashTable:
 
         Fill this in.
         '''
-        self.count += int(add)
-        self.resize()
         index = self._hash_mod(key)
         new_pair = LinkedPair(key, value)
         if (pair := self.storage[index]) is not None:
@@ -69,10 +67,14 @@ class HashTable:
                 elif pair.next is not None:
                     pair = pair.next
                 else:
+                    self.count += int(add)
+                    self.resize()
                     pair.next = new_pair
                     return
         else:
+            self.count += int(add)
             self.storage[index] = new_pair
+            self.resize()
 
     def remove(self, key):
         '''
