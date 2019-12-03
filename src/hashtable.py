@@ -14,6 +14,7 @@ class HashTable:
     '''
     def __init__(self, capacity):
         self.count = 0
+        self.cap_init = capacity
         self.capacity = capacity  # Number of buckets in the hash table
         self.storage = [None] * capacity
 
@@ -47,7 +48,7 @@ class HashTable:
         return self._hash_djb2(key) % self.capacity
 
 
-    def insert(self, key, value):
+    def insert(self, key, value, add=1):
         '''
         Store the value with the given key.
 
@@ -55,9 +56,8 @@ class HashTable:
 
         Fill this in.
         '''
-        self.count += 1
-        # if self.count > self.capacity:
-        #     self.resize()
+        self.count += add
+        self.resize()
         index = self._hash_mod(key)
         new_pair = LinkedPair(key, value)
         if (pair := self.storage[index]) is not None:
@@ -96,6 +96,7 @@ class HashTable:
             else:
                 self.storage[index] = None
             self.count -= 1
+            self.resize()
         else:
             print(f"ERROR: '{key}' key not found")
 
@@ -124,15 +125,22 @@ class HashTable:
 
         Fill this in.
         '''
-        old_capacity = self.capacity
-        old_storage = [*self.storage]
-        self.capacity *= 2
-        self.storage = [None] * self.capacity
-        for i in range(old_capacity):
-            if (pair := old_storage[i]) is not None:
-              while pair is not None:
-                  self.insert(pair.key, pair.value)
-                  pair = pair.next
+        load = self.count / self.capacity
+        if (overload := load > 0.7) or load < 0.2:
+            old_capacity = self.capacity
+            old_storage = [*self.storage]
+            if overload:
+                self.capacity *= 2
+            elif self.cap_init < (new_cap := self.capacity // 2):
+                self.capacity = new_cap
+            else:
+                return
+            self.storage = [None] * self.capacity
+            for i in range(old_capacity):
+                if (pair := old_storage[i]) is not None:
+                  while pair is not None:
+                      self.insert(pair.key, pair.value, 0)
+                      pair = pair.next
 
 
 

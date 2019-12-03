@@ -89,6 +89,6 @@ Run your code by typing `python hashtable.py`.
 Run tests by typing `python test_hashtable.py`.
 
 ## STRETCH GOALS
-1. Research and implement the DJB2 hashing algorithm.
+1. [x] Research and implement the DJB2 hashing algorithm.
 
-2. Update your HashTable to automatically double in size when it grows past a load factor of 0.7 and half in size when it shrinks past a load factor of 0.2. This should only occur if the HashTable has been resized past the initial size. Refactor tests to pass with your resizing HashTable.
+2. [x] Update your HashTable to automatically double in size when it grows past a load factor of 0.7 and half in size when it shrinks past a load factor of 0.2. This should only occur if the HashTable has been resized past the initial size. Refactor tests to pass with your resizing HashTable.
