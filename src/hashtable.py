@@ -59,22 +59,18 @@ class HashTable:
         '''
         index = self._hash_mod(key)
         new_pair = LinkedPair(key, value)
-        if (pair := self.storage[index]) is not None:
-            while pair is not None:
-                if pair.key == key:
-                    pair.value = value
-                    return
-                elif pair.next is not None:
-                    pair = pair.next
-                else:
-                    self.count += int(add)
-                    self.resize()
-                    pair.next = new_pair
-                    return
-        else:
-            self.count += int(add)
-            self.storage[index] = new_pair
-            self.resize()
+        pair = self.storage[index]
+        while pair is not None:
+            if pair.key == key:
+                pair.value = value
+                return
+            elif pair.next is None:
+                break
+            else:
+                pair = pair.next
+        self.count += int(add)
+        self.storage[index] = new_pair
+        self.resize()
 
     def remove(self, key):
         '''
