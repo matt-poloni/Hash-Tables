@@ -16,6 +16,7 @@ class HashTable:
         self.count = 0
         self.cap_init = capacity
         self.capacity = capacity  # Number of buckets in the hash table
+        self.load = lambda: self.count / self.capacity
         self.storage = [None] * capacity
 
 
@@ -96,7 +97,7 @@ class HashTable:
             else:
                 self.storage[index] = None
             self.count -= 1
-            self.resize()
+            self.resize(False)
         else:
             print(f"ERROR: '{key}' key not found")
 
@@ -118,20 +119,21 @@ class HashTable:
                 pair = pair.next
         return None
 
-    def resize(self):
+    def resize(self, up=True):
         '''
         Doubles the capacity of the hash table and
         rehash all key/value pairs.
 
         Fill this in.
         '''
-        load = self.count / self.capacity
-        if (overload := load > 0.7) or load < 0.2:
+        load = self.load()
+        newsize = load > 0.7 if up else load < 0.2
+        if newsize:
             old_capacity = self.capacity
             old_storage = [*self.storage]
-            if overload:
+            if up is True:
                 self.capacity *= 2
-            elif self.cap_init < (new_cap := self.capacity // 2):
+            elif self.cap_init <= (new_cap := self.capacity // 2):
                 self.capacity = new_cap
             else:
                 return
