@@ -48,7 +48,7 @@ class HashTable:
         return self._hash_djb2(key) % self.capacity
 
 
-    def insert(self, key, value, add=1):
+    def insert(self, key, value, add=True):
         '''
         Store the value with the given key.
 
@@ -56,7 +56,7 @@ class HashTable:
 
         Fill this in.
         '''
-        self.count += add
+        self.count += int(add)
         self.resize()
         index = self._hash_mod(key)
         new_pair = LinkedPair(key, value)
@@ -139,7 +139,7 @@ class HashTable:
             for i in range(old_capacity):
                 if (pair := old_storage[i]) is not None:
                   while pair is not None:
-                      self.insert(pair.key, pair.value, 0)
+                      self.insert(pair.key, pair.value, False)
                       pair = pair.next
 
 
