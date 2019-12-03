@@ -37,7 +37,8 @@ class HashTable:
         '''
         hash_value = 5381
         for char in key:
-            return ((hash_value << 5) + hash_value) ^ ord(char)
+            hash_value = ((hash_value << 5) + hash_value) ^ ord(char)
+        return hash_value
 
 
     def _hash_mod(self, key):
