@@ -82,22 +82,22 @@ class HashTable:
         '''
         index = self._hash_mod(key)
         prev = None
-        if (pair := self.storage[index]) is not None:
-            while pair.key != key:
-                if pair.next is not None:
-                    prev = pair
-                    pair = pair.next
-                else:
-                    print(f"ERROR: '{key}' key not found")
-                    return
-            if prev is not None:
-                prev.next = pair.next
+        pair = self.storage[index]
+        while pair is not None:
+            if pair.key == key:
+                break
             else:
-                self.storage[index] = None
-            self.count -= 1
-            self.resize(False)
+                prev = pair
+                pair = pair.next
         else:
             print(f"ERROR: '{key}' key not found")
+            return
+        if prev is not None:
+            prev.next = pair.next
+        else:
+            self.storage[index] = None
+        self.count -= 1
+        self.resize(False)
 
 
     def retrieve(self, key):
