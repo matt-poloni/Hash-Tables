@@ -37,8 +37,7 @@ class HashTable:
         '''
         hash_value = 5381
         for char in key:
-            hash_value = ((hash_value << 5) + hash_value) ^ ord(char)
-        return hash_value
+            return ((hash_value << 5) + hash_value) ^ ord(char)
 
 
     def _hash_mod(self, key):
@@ -97,7 +96,7 @@ class HashTable:
         else:
             self.storage[index] = None
         self.count -= 1
-        self.resize(False)
+        self.resize(up=False)
 
 
     def retrieve(self, key):
@@ -126,7 +125,7 @@ class HashTable:
         '''
         load = self.load()
         newsize = load > 0.7 if up else load < 0.2
-        if newsize:
+        if newsize is True:
             old_capacity = self.capacity
             old_storage = [*self.storage]
             if up is True:
