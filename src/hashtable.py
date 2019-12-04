@@ -16,6 +16,7 @@ class HashTable:
         self.count = 0
         self.cap_init = capacity
         self.capacity = capacity  # Number of buckets in the hash table
+        self.load = lambda: self.count / self.capacity
         self.storage = [None] * capacity
 
 
@@ -56,22 +57,20 @@ class HashTable:
 
         Fill this in.
         '''
-        self.count += int(add)
-        self.resize()
         index = self._hash_mod(key)
         new_pair = LinkedPair(key, value)
-        if (pair := self.storage[index]) is not None:
-            while pair is not None:
-                if pair.key == key:
-                    pair.value = value
-                    return
-                elif pair.next is not None:
-                    pair = pair.next
-                else:
-                    pair.next = new_pair
-                    return
-        else:
-            self.storage[index] = new_pair
+        pair = self.storage[index]
+        while pair is not None:
+            if pair.key == key:
+                pair.value = value
+                return
+            elif pair.next is None:
+                break
+            else:
+                pair = pair.next
+        self.count += int(add)
+        self.storage[index] = new_pair
+        self.resize()
 
     def remove(self, key):
         '''
@@ -83,22 +82,22 @@ class HashTable:
         '''
         index = self._hash_mod(key)
         prev = None
-        if (pair := self.storage[index]) is not None:
-            while pair.key != key:
-                if pair.next is not None:
-                    prev = pair
-                    pair = pair.next
-                else:
-                    print(f"ERROR: '{key}' key not found")
-                    return
-            if prev is not None:
-                prev.next = pair.next
+        pair = self.storage[index]
+        while pair is not None:
+            if pair.key == key:
+                break
             else:
-                self.storage[index] = None
-            self.count -= 1
-            self.resize()
+                prev = pair
+                pair = pair.next
         else:
             print(f"ERROR: '{key}' key not found")
+            return
+        if prev is not None:
+            prev.next = pair.next
+        else:
+            self.storage[index] = None
+        self.count -= 1
+        self.resize(up=False)
 
 
     def retrieve(self, key):
@@ -118,20 +117,21 @@ class HashTable:
                 pair = pair.next
         return None
 
-    def resize(self):
+    def resize(self, up=True):
         '''
         Doubles the capacity of the hash table and
         rehash all key/value pairs.
 
         Fill this in.
         '''
-        load = self.count / self.capacity
-        if (overload := load > 0.7) or load < 0.2:
+        load = self.load()
+        newsize = load > 0.7 if up else load < 0.2
+        if newsize is True:
             old_capacity = self.capacity
             old_storage = [*self.storage]
-            if overload:
+            if up is True:
                 self.capacity *= 2
-            elif self.cap_init < (new_cap := self.capacity // 2):
+            elif self.cap_init <= (new_cap := self.capacity // 2):
                 self.capacity = new_cap
             else:
                 return
